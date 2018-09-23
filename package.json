@@ -1,0 +1,16 @@
+{
+  "name": "@brunocarvalho/error-handler",
+  "version": "0.0.0",
+  "description": "Error handler for express JSON APIs",
+  "author": "Bruno Carvalho de Araujo <brunocarvalhodearaujo@gmail.com>",
+  "license": "MIT",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "http-status": "1.2.0",
+    "lodash.assign": "4.2.0",
+    "lodash.pick": "4.4.0"
+  }
+}
