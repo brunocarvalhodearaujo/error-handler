@@ -1,6 +1,6 @@
 {
   "name": "@brunocarvalho/error-handler",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "error handler for express APIs applications",
   "author": "Bruno Carvalho de Araujo <brunocarvalhodearaujo@gmail.com>",
   "license": "MIT",
