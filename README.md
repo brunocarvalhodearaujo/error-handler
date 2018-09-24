@@ -1,12 +1,12 @@
-error-handler
-=============
+@brunocarvalho/error-handler
+============================
 
 A error handler for express APIs applications.
 
 ## Instalation
 
 ```sh
-$ [sudo] npm install --save @brunocarvalho/json-error-handler
+$ [sudo] npm install --save @brunocarvalho/error-handler
 ```
 
 ## usage
