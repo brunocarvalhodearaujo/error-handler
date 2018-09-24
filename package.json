@@ -1,16 +1,33 @@
 {
   "name": "@brunocarvalho/error-handler",
   "version": "0.1.0",
-  "description": "Error handler for express JSON APIs",
+  "description": "error handler for express APIs applications",
   "author": "Bruno Carvalho de Araujo <brunocarvalhodearaujo@gmail.com>",
   "license": "MIT",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --coverage"
+  },
+  "devDependencies": {
+    "jest": "23.6.0"
   },
   "dependencies": {
     "http-status": "1.2.0",
     "lodash.assign": "4.2.0",
     "lodash.pick": "4.4.0"
+  },
+  "jest": {
+    "verbose": true,
+    "coverageReporters": [
+      "text-summary"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    }
   }
 }
