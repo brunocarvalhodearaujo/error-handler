@@ -37,7 +37,7 @@ function middleware (err, request, response, next) {
   }
 
   // client errors
-  assign(error, pick(err, [ 'message', 'name', 'code', 'type' ]))
+  assign(error, pick(err, [ 'message', 'name', 'code', 'type', 'reason' ]))
 
   response.json({ error })
 }
