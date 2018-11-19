@@ -28,16 +28,13 @@ function middleware (err, request, response, next) {
     error.type = http[status]
   }
 
+  // error fields
+  assign(error, pick(err, [ 'message', 'name', 'code', 'type', 'reason' ]))
+
   // internal server errors
   if (status >= http.INTERNAL_SERVER_ERROR) {
     error.message = err.message || http[status]
-    response.json({ error })
-
-    return
   }
-
-  // client errors
-  assign(error, pick(err, [ 'message', 'name', 'code', 'type', 'reason' ]))
 
   response.json({ error })
 }
