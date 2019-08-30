@@ -29,7 +29,7 @@ function middleware (err, request, response, next) {
   }
 
   // error fields
-  assign(error, pick(err, [ 'message', 'name', 'code', 'type', 'reason' ]))
+  assign(error, pick(err, [ 'message', 'name', 'code', 'type', 'reason', 'trace_id' ]))
 
   // internal server errors
   if (status >= http.INTERNAL_SERVER_ERROR) {
