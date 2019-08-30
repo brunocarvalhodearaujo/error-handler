@@ -3,40 +3,68 @@ const assign = require('lodash.assign')
 const pick = require('lodash.pick')
 
 /**
- * @param {Error} [err]
- * @param {import('express').Request} request
- * @param {import('express').Response} response
- * @param {import('express').NextFunction} next
+ * @typedef {import('express').Request} Request
+ * @typedef {import('express').Response} Response
+ * @typedef {import('express').NextFunction} NextFunction
  */
-function middleware (err, request, response, next) {
-  let status = err.code || err.status || err.statusCode || http.INTERNAL_SERVER_ERROR
 
-  if (status < http.BAD_REQUEST) {
-    status = http.INTERNAL_SERVER_ERROR
+/**
+ * @param {{ withTrace?: boolean }} options
+ * @returns {(err: Error, request: Request, response: Response, next: NextFunction) => void}
+ */
+function middleware (options = {}) {
+  const { withTrace = false } = options
+
+  return (err, request, response, next) => {
+    let status = err.code || err.status || err.statusCode || http.INTERNAL_SERVER_ERROR
+
+    if (isNaN(status)) {
+      status = http.INTERNAL_SERVER_ERROR
+    }
+
+    if (status < http.BAD_REQUEST) {
+      status = http.INTERNAL_SERVER_ERROR
+    }
+
+    response.status(status)
+
+    const error = { status }
+
+    // show the stacktrace when not in production
+    if (process.env.NODE_ENV !== 'production') {
+      error.stack = err.stack
+    }
+
+    if (!err.hasOwnProperty('message')) {
+      err = new Error('Internal server error')
+    }
+
+    if (isNaN(error.code)) {
+      err.code = status
+    }
+
+    if (!err.type) {
+      error.type = http[status]
+    }
+
+    // error fields
+    assign(error, pick(err, [
+      'message',
+      'name',
+      'code',
+      'type',
+      'reason',
+      'trace',
+      'trace_id'
+    ]))
+
+    // internal server errors
+    if (status >= http.INTERNAL_SERVER_ERROR) {
+      error.message = err.message || http[status]
+    }
+
+    response.json({ error })
   }
-
-  response.status(status)
-
-  const error = { status }
-
-  // show the stacktrace when not in production
-  if (process.env.NODE_ENV !== 'production') {
-    error.stack = err.stack
-  }
-
-  if (!err.type) {
-    error.type = http[status]
-  }
-
-  // error fields
-  assign(error, pick(err, [ 'message', 'name', 'code', 'type', 'reason', 'trace_id' ]))
-
-  // internal server errors
-  if (status >= http.INTERNAL_SERVER_ERROR) {
-    error.message = err.message || http[status]
-  }
-
-  response.json({ error })
 }
 
-module.exports = () => middleware
+module.exports = middleware
