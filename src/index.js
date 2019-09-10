@@ -54,9 +54,17 @@ function middleware (options = {}) {
       'code',
       'type',
       'reason',
+      'errors',
       'trace',
       'trace_id'
     ]))
+
+    if (error.errors) {
+      error.errors = error.errors.map(error => {
+        return Object.getOwnPropertyNames(error)
+          .reduce((previous, current) => ({ ...previous, [current]: error[current] }), {})
+      })
+    }
 
     // internal server errors
     if (status >= http.INTERNAL_SERVER_ERROR) {
