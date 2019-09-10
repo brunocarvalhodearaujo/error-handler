@@ -62,6 +62,7 @@ function middleware (options = {}) {
     if (error.errors) {
       error.errors = error.errors.map(error => {
         return Object.getOwnPropertyNames(error)
+          .filter(key => !(key === 'stack' && process.env.NODE_ENV === 'production'))
           .reduce((previous, current) => ({ ...previous, [current]: error[current] }), {})
       })
     }
