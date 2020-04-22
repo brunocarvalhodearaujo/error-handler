@@ -13,15 +13,15 @@ export type RequestError = Error & {
   reason?: string
 }
 
-type Options = {
+export type Options = {
   withTrace?: boolean
 }
 
-type middleware = (options?: Options) => (
+declare function middleware (options?: Options): (
   err: Error,
   request: Request,
   response: Response,
   next: NextFunction
-) => void
+) => any
 
 export default middleware
