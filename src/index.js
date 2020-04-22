@@ -13,8 +13,6 @@ const pick = require('lodash.pick')
  * @returns {(err: Error, request: Request, response: Response, next: NextFunction) => void}
  */
 function middleware (options = {}) {
-  const { withTrace = false } = options
-
   return (err, request, response, next) => {
     let status = err.code || err.status || err.statusCode || http.INTERNAL_SERVER_ERROR
 
