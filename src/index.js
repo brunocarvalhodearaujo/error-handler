@@ -37,14 +37,9 @@ function middleware (options = {}) {
       err = new Error('Internal server error')
     }
 
-<<<<<<< HEAD
-  // client errors
-  assign(error, pick(err, [ 'message', 'name', 'code', 'type', 'trace_id' ]))
-=======
     if (isNaN(error.code)) {
       err.code = status
     }
->>>>>>> develop
 
     if (!err.type) {
       error.type = http[status]
