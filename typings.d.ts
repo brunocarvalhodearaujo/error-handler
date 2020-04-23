@@ -10,7 +10,15 @@ import { Request, Response, NextFunction } from 'express'
 
 export type RequestError = Error & {
   statusCode?: number,
-  reason?: string
+  status?: number,
+  code?: number,
+  name?: string,
+  type?: string,
+  errors?: string,
+  trace?: string,
+  trace_id?: string,
+  reason?: string,
+  [key: string]: any
 }
 
 export type Options = {
