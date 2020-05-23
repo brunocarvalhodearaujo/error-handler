@@ -74,4 +74,22 @@ function middleware (options = {}) {
   }
 }
 
+function yupErrorHandlerMiddleware () {
+  const yup = require('yup')
+
+  return (error, request, response, next) => {
+    if ((error instanceof yup.ValidationError)) {
+      const err = new Error(error.message)
+      err.code = 422
+      err.name = error.name
+      err.type = error.type
+      err.reason = error.name.toUpperCase().replace('ERROR', '')
+      return next(err)
+    }
+
+    return next(error)
+  }
+}
+
 module.exports = middleware
+module.exports.yupErrorHandlerMiddleware = yupErrorHandlerMiddleware

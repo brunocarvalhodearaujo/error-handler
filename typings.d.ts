@@ -32,4 +32,11 @@ declare function middleware (options?: Options): (
   next: NextFunction
 ) => any
 
+export declare function yupErrorHandlerMiddleware(): (
+  err: Error,
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => any
+
 export default middleware

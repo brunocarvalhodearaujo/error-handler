@@ -12,6 +12,9 @@
   "devDependencies": {
     "jest": "23.6.0"
   },
+  "peerDependencies": {
+    "yup": "^0.29.0"
+  },
   "dependencies": {
     "http-status": "1.4.2",
     "lodash.assign": "4.2.0",
