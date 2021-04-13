@@ -19,7 +19,7 @@ const app = express()
 
 app.get('/', (req, res) => {
   const err: RequestError = new Error('Not Found')
-  err.reason = `A serie com id "${OrthancSeriesID}" não foi encontrada`
+  err.reason = `item not found in database`
   err.statusCode = 404
   throw err
 })
