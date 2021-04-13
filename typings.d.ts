@@ -18,6 +18,7 @@ export type RequestError = Error & {
   trace?: string,
   trace_id?: string,
   reason?: string,
+  isRequestError?: boolean,
   [key: string]: any
 }
 
@@ -38,5 +39,7 @@ export declare function yupErrorHandlerMiddleware(): (
   response: Response,
   next: NextFunction
 ) => any
+
+export declare function isRequestError (error: any): error is RequestError
 
 export default middleware

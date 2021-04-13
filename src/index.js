@@ -26,7 +26,10 @@ function middleware (options = {}) {
 
     response.status(status)
 
-    const error = { status }
+    const error = {
+      status,
+      isRequestError: true
+    }
 
     // show the stacktrace when not in production
     if (process.env.NODE_ENV !== 'production') {
@@ -54,7 +57,8 @@ function middleware (options = {}) {
       'reason',
       'errors',
       'trace',
-      'trace_id'
+      'trace_id',
+      'isRequestError'
     ]))
 
     if (error.errors) {
@@ -91,5 +95,13 @@ function yupErrorHandlerMiddleware () {
   }
 }
 
+/**
+ * @param {Error} error
+ */
+function isRequestError (error) {
+  return error.isRequestError instanceof Error
+}
+
 module.exports = middleware
 module.exports.yupErrorHandlerMiddleware = yupErrorHandlerMiddleware
+module.exports.isRequestError = isRequestError
