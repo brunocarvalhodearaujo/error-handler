@@ -10,7 +10,7 @@
     "test": "jest --coverage"
   },
   "devDependencies": {
-    "jest": "23.6.0"
+    "jest": "29.3.1"
   },
   "peerDependencies": {
     "yup": "^0.29.0"
