@@ -1,19 +1,19 @@
-@brunocarvalho/error-handler
-============================
+error-handler
+=============
 
 A error handler for express APIs applications.
 
-## Instalation
+## Installation
 
 ```sh
-$ [sudo] npm install --save @brunocarvalho/error-handler
+$ npm install --save @brunocarvalho/error-handler
 ```
 
-## usage
+## usage 
 
-```js
+```ts
 import express from 'express'
-import errorHandler from '@brunocarvalho/error-handler'
+import errorHandler, { type RequestError } from '@brunocarvalho/error-handler'
 
 const app = express()
 
