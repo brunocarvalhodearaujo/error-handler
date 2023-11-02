@@ -6,18 +6,18 @@
  * the root directory of this source tree.
  */
 
-const errorHandler = require('../src')
+const middleware = require('../src')
 
 describe('error-handler', () => {
   describe('exports', () => {
     it('should expose a default function', () => {
-      expect(typeof errorHandler).toBe('function')
+      expect(typeof middleware).toBe('function')
     })
   })
 
   describe('usage', () => {
     it('should return an error handler', () => {
-      expect(typeof errorHandler()).toBe('function')
+      expect(typeof middleware()).toBe('function')
     })
   })
 
@@ -30,7 +30,7 @@ describe('error-handler', () => {
 
       const err = new Error('error')
 
-      errorHandler()(err, null, res)
+      middleware()(err, null, res)
 
       expect(res.status).toHaveBeenCalledWith(500)
     })
@@ -45,7 +45,7 @@ describe('error-handler', () => {
 
       err.statusCode = 214
 
-      errorHandler()(err, null, res)
+      middleware()(err, null, res)
 
       expect(res.status).toHaveBeenCalledWith(500)
     })
@@ -60,7 +60,7 @@ describe('error-handler', () => {
 
       err.statusCode = 400
 
-      errorHandler()(err, null, res)
+      middleware()(err, null, res)
 
       expect(res.status).toHaveBeenCalledWith(400)
       const [[clientErr]] = res.json.mock.calls
@@ -85,7 +85,7 @@ describe('error-handler', () => {
 
       err.statusCode = 400
 
-      errorHandler()(err, null, res)
+      middleware()(err, null, res)
 
       expect(res.status).toHaveBeenCalledWith(400)
       const [[clientErr]] = res.json.mock.calls
@@ -95,5 +95,90 @@ describe('error-handler', () => {
       expect(clientErr.error).toHaveProperty('message', 'error')
       expect(clientErr.error).not.toHaveProperty('stack')
     })
+  })
+})
+
+describe('middleware', () => {
+  it('should handle error without message', () => {
+    const res = {
+      json: jest.fn(),
+      status: jest.fn()
+    }
+
+    const err = {}
+
+    middleware()(err, null, res, null)
+
+    expect(res.status).toHaveBeenCalledWith(500)
+    const [[serverErr]] = res.json.mock.calls
+
+    expect(serverErr.error).toHaveProperty('status', 500)
+    expect(serverErr.error).toHaveProperty('message', 'Internal server error')
+  })
+
+  it('should handle error with invalid status', () => {
+    const res = {
+      json: jest.fn(),
+      status: jest.fn()
+    }
+
+    const err = {
+      statusCode: 300
+    }
+
+    middleware()(err, null, res, null)
+
+    expect(res.status).toHaveBeenCalledWith(500)
+  })
+
+  it('should handle error with valid status', () => {
+    const res = {
+      json: jest.fn(),
+      status: jest.fn()
+    }
+
+    const err = {
+      statusCode: 404
+    }
+
+    middleware()(err, null, res, null)
+
+    expect(res.status).toHaveBeenCalledWith(404)
+  })
+
+  it('should handle error with additional fields', () => {
+    const res = {
+      json: jest.fn(),
+      status: jest.fn()
+    }
+
+    const err = {
+      statusCode: 400,
+      message: 'Bad request',
+      name: 'BadRequestError',
+      code: 400,
+      type: 'client_error',
+      reason: 'Invalid input',
+      errors: [{ message: 'Invalid email' }],
+      trace: 'trace_id',
+      trace_id: 'trace_id',
+      isRequestError: true
+    }
+
+    middleware()(err, null, res, null)
+
+    expect(res.status).toHaveBeenCalledWith(400)
+    const [[clientErr]] = res.json.mock.calls
+
+    expect(clientErr.error).toHaveProperty('status', 400)
+    expect(clientErr.error).toHaveProperty('message', 'Bad request')
+    expect(clientErr.error).toHaveProperty('name', 'BadRequestError')
+    expect(clientErr.error).toHaveProperty('code', 400)
+    expect(clientErr.error).toHaveProperty('type', 'client_error')
+    expect(clientErr.error).toHaveProperty('reason', 'Invalid input')
+    expect(clientErr.error).toHaveProperty('errors', [{ message: 'Invalid email' }])
+    expect(clientErr.error).toHaveProperty('trace', 'trace_id')
+    expect(clientErr.error).toHaveProperty('trace_id', 'trace_id')
+    expect(clientErr.error).toHaveProperty('isRequestError', true)
   })
 })
